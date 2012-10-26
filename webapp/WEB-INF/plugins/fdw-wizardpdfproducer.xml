@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="no"?><plug-in>
+
+    <!-- Plugin Informations -->
+    <name>fdw-wizardpdfproducer</name>
+    <class>fr.paris.lutece.plugins.fdw.modules.wizardpdfproducer.service.WizardPdfProducerPlugin</class>
+    <version>1.0.0</version>
+    <description>module.fdw.wizardpdfproducer.plugin.description</description>
+    <documentation/>
+    <installation/>
+    <changes/>
+    <user-guide/>
+    <description>module.fdw.wizardpdfproducer.plugin.description</description>
+    <provider>module.fdw.wizardpdfproducer.plugin.provider</provider>
+    <provider-url>http://lutece.paris.fr</provider-url>
+    <icon-url>images/admin/skin/plugins/fdw-wizardpdfproducer/fdw-wizardpdfproducer.png</icon-url>
+    <copyright>Copyright 2001-2012 Mairie de Paris</copyright>
+    <core-version-dependency>
+        <min-core-version>4.0.0</min-core-version>
+        <max-core-version/>
+    </core-version-dependency>
+    <db-pool-required>1</db-pool-required>
+
+</plug-in>
