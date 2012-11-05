@@ -33,23 +33,22 @@
  */
 package fr.paris.lutece.plugins.fdw.modules.wizardpdfproducer.service;
 
+
 /**
- * 
+ *
  * WizardPdfProducerService
- * 
+ *
  */
 public class WizardPdfProducerService
 {
-
     private static WizardPdfProducerService _singleton;
 
     /**
      * Initialize the service
-     * 
+     *
      */
     public void init(  )
     {
-
     }
 
     /**
@@ -66,6 +65,4 @@ public class WizardPdfProducerService
 
         return _singleton;
     }
-
-
 }
