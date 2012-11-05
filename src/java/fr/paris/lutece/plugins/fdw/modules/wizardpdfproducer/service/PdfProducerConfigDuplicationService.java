@@ -67,51 +67,55 @@ public class PdfProducerConfigDuplicationService implements IDuplicationService
         Workflow workflowToCopy, Workflow copyOfWorkflow )
     {
         Plugin plugin = PluginService.getPlugin( PLUGIN_NAME );
-        List<ConfigProducer> listConfigsToCopy = _configProducerService.loadListProducerConfig( plugin,
-                directoryToCopy.getIdDirectory(  ), CONFIG_TYPE );
 
-        for ( ConfigProducer configProducerToCopy : listConfigsToCopy )
+        if ( ( directoryToCopy != null ) && ( copyOfDirectory != null ) )
         {
-            // copy of config
-            ConfigProducer configProducerCopy = configProducerToCopy;
-            configProducerCopy.setIdDirectory( copyOfDirectory.getIdDirectory(  ) );
+            List<ConfigProducer> listConfigsToCopy = _configProducerService.loadListProducerConfig( plugin,
+                    directoryToCopy.getIdDirectory(  ), CONFIG_TYPE );
 
-            // list of entries to copy
-            EntryFilter entryFilter = new EntryFilter(  );
-            entryFilter.setIdDirectory( directoryToCopy.getIdDirectory(  ) );
-
-            List<IEntry> listEntryToCopy = EntryHome.getEntryList( entryFilter, plugin );
-
-            // list of copied entries
-            entryFilter = new EntryFilter(  );
-            entryFilter.setIdDirectory( copyOfDirectory.getIdDirectory(  ) );
-
-            List<IEntry> listEntryCopy = EntryHome.getEntryList( entryFilter, plugin );
-
-            // list of id entry to copy
-            List<Integer> listConfigIdEntryToCopy = _configProducerService.loadListConfigEntry( plugin,
-                    configProducerToCopy.getIdProducerConfig(  ) );
-
-            // list of copied id entry
-            List<Integer> listConfigIdEntryCopy = new ArrayList<Integer>(  );
-
-            // copy of entries list
-            // we use the position of entries to find matching entries between the original directory and the copy
-            int nSize = listEntryToCopy.size(  );
-
-            for ( int i = 0; i < nSize; i++ )
+            for ( ConfigProducer configProducerToCopy : listConfigsToCopy )
             {
-                IEntry entry = listEntryToCopy.get( i );
+                // copy of config
+                ConfigProducer configProducerCopy = configProducerToCopy;
+                configProducerCopy.setIdDirectory( copyOfDirectory.getIdDirectory(  ) );
 
-                if ( listConfigIdEntryToCopy.contains( entry.getIdEntry(  ) ) )
+                // list of entries to copy
+                EntryFilter entryFilter = new EntryFilter(  );
+                entryFilter.setIdDirectory( directoryToCopy.getIdDirectory(  ) );
+
+                List<IEntry> listEntryToCopy = EntryHome.getEntryList( entryFilter, plugin );
+
+                // list of copied entries
+                entryFilter = new EntryFilter(  );
+                entryFilter.setIdDirectory( copyOfDirectory.getIdDirectory(  ) );
+
+                List<IEntry> listEntryCopy = EntryHome.getEntryList( entryFilter, plugin );
+
+                // list of id entry to copy
+                List<Integer> listConfigIdEntryToCopy = _configProducerService.loadListConfigEntry( plugin,
+                        configProducerToCopy.getIdProducerConfig(  ) );
+
+                // list of copied id entry
+                List<Integer> listConfigIdEntryCopy = new ArrayList<Integer>(  );
+
+                // copy of entries list
+                // we use the position of entries to find matching entries between the original directory and the copy
+                int nSize = listEntryToCopy.size(  );
+
+                for ( int i = 0; i < nSize; i++ )
                 {
-                    IEntry correspondingEntry = listEntryCopy.get( i );
-                    listConfigIdEntryCopy.add( correspondingEntry.getIdEntry(  ) );
-                }
-            }
+                    IEntry entry = listEntryToCopy.get( i );
 
-            // perform copy
-            _configProducerService.addNewConfig( plugin, configProducerCopy, listConfigIdEntryCopy );
+                    if ( listConfigIdEntryToCopy.contains( entry.getIdEntry(  ) ) )
+                    {
+                        IEntry correspondingEntry = listEntryCopy.get( i );
+                        listConfigIdEntryCopy.add( correspondingEntry.getIdEntry(  ) );
+                    }
+                }
+
+                // perform copy
+                _configProducerService.addNewConfig( plugin, configProducerCopy, listConfigIdEntryCopy );
+            }
         }
     }
 
