@@ -5,6 +5,7 @@
     <!-- Services -->
     <bean id="fdw-wizardpdfproducer.pdfProducerConfigDuplicationService" class="fr.paris.lutece.plugins.fdw.modules.wizardpdfproducer.service.PdfProducerConfigDuplicationService" >
     	<property name="configProducerService" ref="directory-pdfproducer.manageConfigProducer" />
+    	<property name="priority" value="10" />
     </bean>
 
 </beans>

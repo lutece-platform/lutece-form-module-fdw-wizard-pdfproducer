@@ -40,7 +40,8 @@ import fr.paris.lutece.plugins.directory.business.IEntry;
 import fr.paris.lutece.plugins.directory.modules.pdfproducer.business.producerconfig.ConfigProducer;
 import fr.paris.lutece.plugins.directory.modules.pdfproducer.service.ConfigProducerService;
 import fr.paris.lutece.plugins.fdw.modules.wizard.business.DuplicationContext;
-import fr.paris.lutece.plugins.fdw.modules.wizard.service.IDuplicationService;
+import fr.paris.lutece.plugins.fdw.modules.wizard.exception.DuplicationException;
+import fr.paris.lutece.plugins.fdw.modules.wizard.service.DuplicationService;
 import fr.paris.lutece.portal.service.plugin.Plugin;
 import fr.paris.lutece.portal.service.plugin.PluginService;
 
@@ -52,17 +53,15 @@ import java.util.List;
  * Duplication service
  *
  */
-public class PdfProducerConfigDuplicationService implements IDuplicationService
+public class PdfProducerConfigDuplicationService extends DuplicationService
 {
     private static final String PLUGIN_NAME = "fdw-wizardpdfproducer";
     private static final String CONFIG_TYPE = "PDF";
     private ConfigProducerService _configProducerService;
 
-    /* (non-Javadoc)
-     * @see fr.paris.lutece.plugins.fdw.modules.wizard.service.IDuplicationService#doDuplicate(fr.paris.lutece.plugins.form.business.Form, fr.paris.lutece.plugins.form.business.Form, fr.paris.lutece.plugins.directory.business.Directory, fr.paris.lutece.plugins.directory.business.Directory, fr.paris.lutece.plugins.workflowcore.business.workflow.Workflow, fr.paris.lutece.plugins.workflowcore.business.workflow.Workflow)
-     */
     @Override
     public void doDuplicate( DuplicationContext context )
+        throws DuplicationException
     {
         if ( ( context != null ) && context.isDirectoryDuplication(  ) )
         {
@@ -72,51 +71,68 @@ public class PdfProducerConfigDuplicationService implements IDuplicationService
 
             if ( ( directoryToCopy != null ) && ( copyOfDirectory != null ) )
             {
-                List<ConfigProducer> listConfigsToCopy = _configProducerService.loadListProducerConfig( plugin,
-                        directoryToCopy.getIdDirectory(  ), CONFIG_TYPE );
-
-                for ( ConfigProducer configProducerToCopy : listConfigsToCopy )
+                try
                 {
-                    // copy of config
-                    ConfigProducer configProducerCopy = configProducerToCopy;
-                    configProducerCopy.setIdDirectory( copyOfDirectory.getIdDirectory(  ) );
+                    List<ConfigProducer> listConfigsToCopy = _configProducerService.loadListProducerConfig( plugin,
+                            directoryToCopy.getIdDirectory(  ), CONFIG_TYPE );
 
-                    // list of entries to copy
-                    EntryFilter entryFilter = new EntryFilter(  );
-                    entryFilter.setIdDirectory( directoryToCopy.getIdDirectory(  ) );
-
-                    List<IEntry> listEntryToCopy = EntryHome.getEntryList( entryFilter, plugin );
-
-                    // list of copied entries
-                    entryFilter = new EntryFilter(  );
-                    entryFilter.setIdDirectory( copyOfDirectory.getIdDirectory(  ) );
-
-                    List<IEntry> listEntryCopy = EntryHome.getEntryList( entryFilter, plugin );
-
-                    // list of id entry to copy
-                    List<Integer> listConfigIdEntryToCopy = _configProducerService.loadListConfigEntry( plugin,
-                            configProducerToCopy.getIdProducerConfig(  ) );
-
-                    // list of copied id entry
-                    List<Integer> listConfigIdEntryCopy = new ArrayList<Integer>(  );
-
-                    // copy of entries list
-                    // we use the position of entries to find matching entries between the original directory and the copy
-                    int nSize = listEntryToCopy.size(  );
-
-                    for ( int i = 0; i < nSize; i++ )
+                    for ( ConfigProducer configProducerToCopy : listConfigsToCopy )
                     {
-                        IEntry entry = listEntryToCopy.get( i );
+                        // copy of config
+                        ConfigProducer configProducerCopy = configProducerToCopy;
+                        configProducerCopy.setIdDirectory( copyOfDirectory.getIdDirectory(  ) );
 
-                        if ( listConfigIdEntryToCopy.contains( entry.getIdEntry(  ) ) )
+                        // list of entries to copy
+                        EntryFilter entryFilter = new EntryFilter(  );
+                        entryFilter.setIdDirectory( directoryToCopy.getIdDirectory(  ) );
+
+                        List<IEntry> listEntryToCopy = EntryHome.getEntryList( entryFilter, plugin );
+
+                        // list of copied entries
+                        entryFilter = new EntryFilter(  );
+                        entryFilter.setIdDirectory( copyOfDirectory.getIdDirectory(  ) );
+
+                        List<IEntry> listEntryCopy = EntryHome.getEntryList( entryFilter, plugin );
+
+                        // list of id entry to copy
+                        List<Integer> listConfigIdEntryToCopy = _configProducerService.loadListConfigEntry( plugin,
+                                configProducerToCopy.getIdProducerConfig(  ) );
+
+                        // list of copied id entry
+                        List<Integer> listConfigIdEntryCopy = new ArrayList<Integer>(  );
+
+                        // copy of entries list
+                        // we use the position of entries to find matching entries between the original directory and the copy
+                        int nSize = listEntryToCopy.size(  );
+
+                        for ( int i = 0; i < nSize; i++ )
                         {
-                            IEntry correspondingEntry = listEntryCopy.get( i );
-                            listConfigIdEntryCopy.add( correspondingEntry.getIdEntry(  ) );
+                            IEntry entry = listEntryToCopy.get( i );
+
+                            if ( listConfigIdEntryToCopy.contains( entry.getIdEntry(  ) ) )
+                            {
+                                IEntry correspondingEntry = listEntryCopy.get( i );
+                                listConfigIdEntryCopy.add( correspondingEntry.getIdEntry(  ) );
+                            }
                         }
+
+                        // perform copy
+                        _configProducerService.addNewConfig( plugin, configProducerCopy, listConfigIdEntryCopy );
+                    }
+                }
+                catch ( Exception e )
+                {
+                    // rollback - delete already copied config producers
+                    List<ConfigProducer> listConfigsToDelete = _configProducerService.loadListProducerConfig( plugin,
+                            copyOfDirectory.getIdDirectory(  ), CONFIG_TYPE );
+
+                    for ( ConfigProducer configProducerToDelete : listConfigsToDelete )
+                    {
+                        _configProducerService.deleteProducerConfig( plugin,
+                            configProducerToDelete.getIdProducerConfig(  ) );
                     }
 
-                    // perform copy
-                    _configProducerService.addNewConfig( plugin, configProducerCopy, listConfigIdEntryCopy );
+                    throw new DuplicationException( e );
                 }
             }
         }
