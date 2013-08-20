@@ -56,7 +56,7 @@ public class WizardPdfProducerService
      *
      * @return The instance of the singleton
      */
-    public static WizardPdfProducerService getInstance(  )
+    public static synchronized WizardPdfProducerService getInstance( )
     {
         if ( _singleton == null )
         {
