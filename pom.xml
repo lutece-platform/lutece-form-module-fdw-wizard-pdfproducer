@@ -43,7 +43,7 @@
         <dependency>
             <groupId>fr.paris.lutece.plugins</groupId>
             <artifactId>module-fdw-wizard</artifactId>
-            <version>[1.0.0-SNAPSHOT,)</version>
+            <version>[1.0.0,)</version>
             <type>lutece-plugin</type>
         </dependency>
     </dependencies>
