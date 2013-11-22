@@ -3,7 +3,7 @@
     <!-- Plugin Informations -->
     <name>fdw-wizardpdfproducer</name>
     <class>fr.paris.lutece.plugins.fdw.modules.wizardpdfproducer.service.WizardPdfProducerPlugin</class>
-    <version>1.0.1</version>
+    <version>1.0.2</version>
     <description>module.fdw.wizardpdfproducer.plugin.description</description>
     <documentation/>
     <installation/>
