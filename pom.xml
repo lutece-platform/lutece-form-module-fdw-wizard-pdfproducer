@@ -1,18 +1,16 @@
+<?xml version="1.0"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-
     <parent>
-        <artifactId>lutece-plugins-pom</artifactId>
-        <groupId>fr.paris.lutece.plugins</groupId>
-        <version>3.7</version>
+        <artifactId>lutece-global-pom</artifactId>
+        <groupId>fr.paris.lutece.tools</groupId>
+        <version>3.0.11</version>
     </parent>
-
     <modelVersion>4.0.0</modelVersion>
     <groupId>fr.paris.lutece.plugins</groupId>
     <artifactId>module-fdw-wizard-pdfproducer</artifactId>
     <packaging>lutece-plugin</packaging>
     <version>1.0.2-SNAPSHOT</version>
     <name>Lutece Form Directory Workflow Wizard PDF Producer module</name>
-
     <repositories>
         <repository>
             <id>luteceSnapshot</id>
@@ -31,9 +29,7 @@
             </snapshots>
         </repository>
     </repositories>
-
     <dependencies>
-        
         <dependency>
             <groupId>fr.paris.lutece.plugins</groupId>
             <artifactId>module-directory-pdfproducer</artifactId>
@@ -47,16 +43,14 @@
             <type>lutece-plugin</type>
         </dependency>
     </dependencies>
-
     <properties>
         <componentName>fdw-wizard-pdfproducer</componentName>
         <jiraProjectName>FDWWPDF</jiraProjectName>
         <jiraComponentId>10863</jiraComponentId>
     </properties>
-
     <scm>
-        <connection>scm:svn:http://dev.lutece.paris.fr/svn/lutece/portal/trunk/plugins/directory-form-workflow/module-fdw-wizard-pdfproducer</connection>
-        <developerConnection>scm:svn:https://dev.lutece.paris.fr/svn/lutece/portal/trunk/plugins/directory-form-workflow/module-fdw-wizard-pdfproducer</developerConnection>
-        <url>http://dev.lutece.paris.fr/viewvc/lutece/portal/trunk/plugins/directory-form-workflow/module-fdw-wizard-pdfproducer</url>
+        <connection>scm:git:https://github.com/lutece-platform/lutece-form-module-fdw-wizard-pdfproducer.git</connection>
+        <developerConnection>scm:git:https://github.com/lutece-platform/lutece-form-module-fdw-wizard-pdfproducer.git</developerConnection>
+        <url>https://github.com/lutece-platform/lutece-form-module-fdw-wizard-pdfproducer.git</url>
     </scm>
 </project>
